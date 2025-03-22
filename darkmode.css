@@ -1,0 +1,264 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background: url('https://4kwallpapers.com/images/walls/thumbs_3t/11615.png') center / cover fixed;
+    min-height: 100vh;
+    color: #fff;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    background: rgba(20, 20, 40, 0.9);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.logo {
+    width: 49px;
+    height: 47px;
+    background: linear-gradient(135deg, #00eaff, #ff007a);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.1);
+}
+
+.logo img {
+    width: 41px;
+    height: 41px;
+    border-radius: 30px;
+    object-fit: cover;
+}
+
+.web-title {
+    display: flex;
+    flex-direction: column;
+}
+
+.web-title h1 {
+    font-size: 24px;
+    font-weight: 600;
+    background: linear-gradient(90deg, #00eaff, #ff007a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.intro-text {
+    font-size: 14px;
+    color: #ddd;
+    opacity: 0.8;
+}
+
+.nav-toggle {
+    display: none;
+}
+
+.nav-toggle-label {
+    display: none;
+    cursor: pointer;
+    width: 30px;
+    height: 20px;
+    position: relative;
+}
+
+.nav-toggle-label span,
+.nav-toggle-label span::before,
+.nav-toggle-label span::after {
+    background: #fff;
+    height: 2px;
+    width: 100%;
+    position: absolute;
+    transition: all 0.3s ease;
+}
+
+.nav-toggle-label span {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.nav-toggle-label span::before {
+    content: '';
+    top: -8px;
+}
+
+.nav-toggle-label span::after {
+    content: '';
+    top: 8px;
+}
+
+.nav-toggle:checked + .nav-toggle-label span {
+    background: transparent;
+}
+
+.nav-toggle:checked + .nav-toggle-label span::before {
+    transform: rotate(45deg);
+    top: 0;
+}
+
+.nav-toggle:checked + .nav-toggle-label span::after {
+    transform: rotate(-45deg);
+    top: 0;
+}
+
+nav {
+    background: rgba(30, 30, 50, 0.95);
+    padding: 20px;
+    border-radius: 12px;
+    position: fixed;
+    top: 0;
+    right: -100%;
+    height: 100%;
+    width: 260px;
+    transition: right 0.3s ease;
+}
+
+.nav-toggle:checked ~ nav {
+    right: 0;
+}
+
+nav ul {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    padding: 60px 20px;
+}
+
+nav ul li a {
+    color: #fff;
+    font-weight: 500;
+    font-size: 17px;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 6px;
+    transition: all 0.3s ease;
+}
+
+nav ul li a:hover {
+    background: #ff007a;
+    color: #fff;
+    transform: translateX(5px);
+}
+
+.theme-toggle {
+    font-size: 20px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.theme-toggle:hover {
+    background: #ff007a;
+    color: #fff;
+    transform: scale(1.1);
+}
+
+@media (max-width: 768px) {
+    .nav-toggle-label {
+        display: block;
+    }
+}
+
+@media (min-width: 769px) {
+    nav {
+        position: static;
+        height: auto;
+        width: auto;
+        background: transparent;
+        padding: 0;
+    }
+    nav ul {
+        flex-direction: row;
+        gap: 30px;
+        padding: 0;
+    }
+}
+
+.main-content {
+    text-align: center;
+    padding: 60px 20px;
+    margin: 80px auto;
+    max-width: 900px;
+    background: rgba(20, 20, 40, 0.85);
+    border-radius: 20px;
+}
+
+.main-content h1 {
+    font-size: 42px;
+    font-weight: 700;
+    background: linear-gradient(90deg, #00eaff, #ff007a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 20px;
+}
+
+.main-content p {
+    font-size: 18px;
+    color: #ddd;
+    margin-bottom: 30px;
+}
+
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+.cta-button {
+    padding: 12px 35px;
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.register-btn {
+    background: linear-gradient(135deg, #00eaff, #ff007a);
+    color: #fff;
+}
+
+.login-btn {
+    background: transparent;
+    color: #00eaff;
+    border: 2px solid #00eaff;
+}
+
+.cta-button:hover {
+    transform: translateY(-3px);
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    background: rgba(20, 20, 40, 0.9);
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    color: #ddd;
+    font-size: 14px;
+}
