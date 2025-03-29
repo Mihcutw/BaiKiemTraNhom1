@@ -1,5 +1,7 @@
 <?php
-session_start();
+$page_title = "Đăng Ký"; // Đặt tiêu đề trang
+include 'header.php'; // Bao gồm header
+
 $errors = [];
 $success = "";
 $username = '';
@@ -23,83 +25,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         setcookie("user_email", $email, time() + (86400 * 30), "/");
         setcookie("user_password", $password, time() + (86400 * 30), "/");
         setcookie("username", $username, time() + (86400 * 30), "/");
-        $_POST = []; // Clear form data
+        $_POST = [];
         header("Location: login.php");
         exit();
     }
 }
 ?>
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đăng Ký</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-image: url(images/123.jpg);
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(147, 112, 219, 0.1);
-            border: 2px solid transparent;
-            background: linear-gradient(#fff, #fff) padding-box,
-                          linear-gradient(90deg, #00eaff, #ff007a) border-box;
-            width: 100%;
-            max-width: 400px;
-            animation: fadeInDown 0.6s ease-in-out;
-        }
-        @keyframes fadeInDown {
-            0% { opacity: 0; transform: translateY(-20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-        h2 {
-            background: linear-gradient(90deg, #3915bb, #b424b4);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-align: center;
-            margin-bottom: 1.5rem;
-        }
-        .form-group { margin-bottom: 1rem; }
-        label { display: block; color: #4682b4; margin-bottom: 0.5rem; }
-        input { width: 100%; padding: 0.8rem; border: 1px solid #b0c4de; border-radius: 5px; box-sizing: border-box; }
-        button {
-            width: 100%;
-            padding: 0.8rem;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            background: linear-gradient(90deg, #9370db, #4682b4);
-            color: white;
-            font-weight: bold;
-            margin-top: 1rem;
-        }
-        button:hover {
-            background: linear-gradient(90deg, #7b68ee, #87ceeb);
-            box-shadow: 0 2px 10px rgba(70, 130, 180, 0.5);
-        }
-        .links { text-align: center; margin-top: 1rem; }
-        .links a { color: #9370db; text-decoration: none; margin: 0 10px; }
-        .links a:hover { color: #4682b4; text-decoration: underline; }
-        .error { color: red; text-align: center; margin-bottom: 1rem; }
-        .success { color: green; text-align: center; margin-bottom: 1rem; }
-    </style>
-</head>
-<body>
+<div class="login-wrapper">
     <div class="login-container">
         <h2>Đăng Ký</h2>
         <?php if (!empty($errors)) : ?>
@@ -138,5 +71,74 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a href="reset-password.php">Reset Mật Khẩu</a>
         </div>
     </div>
-</body>
-</html>
+</div>
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-image: url(images/123.jpg);
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+    .login-wrapper {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-bottom: 60px; /* Đảm bảo không bị footer che khuất */
+    }
+    .login-container {
+        background-color: #fff;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(147, 112, 219, 0.1);
+        border: 2px solid transparent;
+        background: linear-gradient(#fff, #fff) padding-box, linear-gradient(90deg, #00eaff, #ff007a) border-box;
+        width: 100%;
+        max-width: 400px;
+        animation: fadeInDown 0.6s ease-in-out;
+    }
+    @keyframes fadeInDown {
+        0% { opacity: 0; transform: translateY(-20px); }
+        100% { opacity: 1; transform: translateY(0); }
+    }
+    h2 {
+        background: linear-gradient(90deg, #3915bb, #b424b4);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+    .form-group { margin-bottom: 1rem; }
+    label { display: block; color: #4682b4; margin-bottom: 0.5rem; }
+    input { width: 100%; padding: 0.8rem; border: 1px solid #b0c4de; border-radius: 5px; box-sizing: border-box; }
+    button {
+        width: 100%;
+        padding: 0.8rem;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        background: linear-gradient(90deg, #9370db, #4682b4);
+        color: white;
+        font-weight: bold;
+        margin-top: 1rem;
+    }
+    button:hover {
+        background: linear-gradient(90deg, #7b68ee, #87ceeb);
+        box-shadow: 0 2px 10px rgba(70, 130, 180, 0.5);
+    }
+    .links { text-align: center; margin-top: 1rem; }
+    .links a { color: #9370db; text-decoration: none; margin: 0 10px; }
+    .links a:hover { color: #4682b4; text-decoration: underline; }
+    .error { color: red; text-align: center; margin-bottom: 1rem; }
+    .success { color: green; text-align: center; margin-bottom: 1rem; }
+</style>
+
+<?php include 'footer.php'; // Bao gồm footer ?>
