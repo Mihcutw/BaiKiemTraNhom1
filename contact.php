@@ -1,8 +1,6 @@
 <?php
-// Đặt tiêu đề trang
 $page_title = "Liên Hệ";
 
-// Nhúng header
 include 'header.php';
 ?>
 
@@ -59,7 +57,6 @@ include 'header.php';
 
 
 <style>
-    /* Đảm bảo body không có margin và padding dư thừa */
     body {
         margin: 0;
         padding: 0;
@@ -69,17 +66,16 @@ include 'header.php';
         background-color: #f5f5f5;
     }
 
-    /* Đảm bảo container chính được căn giữa */
     .container {
         max-width: 900px;
         width: 100%;
-        margin: 0 auto; /* Căn giữa theo chiều ngang */
+        margin: 0 auto; 
         padding: 20px;
-        flex: 1; /* Đảm bảo container chiếm không gian còn lại giữa header và footer */
+        flex: 1;
         display: flex;
         flex-direction: column;
-        justify-content: center; /* Căn giữa theo chiều dọc */
-        align-items: center; /* Căn giữa theo chiều ngang */
+        justify-content: center;
+        align-items: center; 
     }
 
     .container h1 {
@@ -93,7 +89,7 @@ include 'header.php';
         display: flex;
         justify-content: space-between;
         gap: 20px;
-        width: 100%; /* Đảm bảo contact-wrapper chiếm toàn bộ chiều rộng của container */
+        width: 100%; 
     }
 
     .form-section {

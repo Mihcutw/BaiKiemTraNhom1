@@ -3,19 +3,17 @@ error_reporting(E_ALL);
 ini_set('display_errors', 1);
 session_start();
 
-// Kiểm tra nếu đã gửi form đăng nhập
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['username'];
     $password = $_POST['password'];
 
-    // Kiểm tra cookie
     if (isset($_COOKIE['user_email']) && isset($_COOKIE['user_password'])) {
         $stored_email = $_COOKIE['user_email'];
         $stored_password = $_COOKIE['user_password'];
 
         if ($email === $stored_email && $password === $stored_password) {
             $_SESSION['email'] = $email;
-            $_SESSION['password'] = $password; // Lưu mật khẩu vào session
+            $_SESSION['password'] = $password;
             header("Location: dashboard.php");
             exit();
         } else {

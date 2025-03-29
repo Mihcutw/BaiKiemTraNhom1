@@ -1,7 +1,5 @@
 <?php
 session_start();
-
-// Khởi tạo biến để lưu giá trị
 $username = '';
 $email = '';
 
@@ -11,15 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = $_POST['password'];
     $confirm_password = $_POST['confirm_password'];
 
-    // Kiểm tra độ dài mật khẩu
     if (strlen($password) < 6) {
         echo "<script>alert('Mật khẩu phải có 6 chữ!');</script>";
     } elseif ($password === $confirm_password) {
-        // Lưu thông tin vào cookie
-        setcookie("user_email", $email, time() + (86400 * 30), "/"); // Cookie tồn tại 30 ngày
-        setcookie("user_password", $password, time() + (86400 * 30), "/"); // Không mã hóa để test, thực tế nên mã hóa
+        setcookie("user_email", $email, time() + (86400 * 30), "/"); 
+        setcookie("user_password", $password, time() + (86400 * 30), "/");
 
-        // Thông báo và chuyển hướng
         echo "<script>alert('Đăng ký thành công!');</script>";
         header("Location: login.php");
         exit();

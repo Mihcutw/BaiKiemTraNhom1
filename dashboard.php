@@ -1,17 +1,13 @@
 <?php
-// Đặt tiêu đề trang
 $page_title = "Dashboard";
 
-// Giả lập dữ liệu
 $product_count = 0;
 $user_count = 0;
 $order_count = 0;
 
-// Nhúng header
 include 'header.php';
 ?>
 
-<!-- Hiển thị số liệu tổng quan -->
 <div class="stats">
     <div class="stat-box">
         <h3>Sản phẩm</h3>
@@ -27,11 +23,9 @@ include 'header.php';
     </div>  
 </div>
 
-<!-- Nút chuyển hướng -->
 <a href="products.php" class="btn">Xem Danh Sách Sản Phẩm</a>
 
 <?php
-// Nhúng footer
 include 'footer.php';
 ?>
 
