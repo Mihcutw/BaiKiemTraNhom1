@@ -1,11 +1,3 @@
-<?php
-session_start();
-if (isset($_GET['theme'])) {
-    $_SESSION['theme'] = $_GET['theme'];
-}
-$theme = isset($_SESSION['theme']) ? $_SESSION['theme'] : 'light';
-?>
-
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -34,9 +26,6 @@ $theme = isset($_SESSION['theme']) ? $_SESSION['theme'] : 'light';
                 <li><a href="#">Giới Thiệu</a></li>
                 <li><a href="contact.php">Liên Hệ</a></li>
                 <li><a href="products.php">Cửa Hàng</a></li>
-                <li><a href="?theme=<?php echo $theme === 'light' ? 'dark' : 'light'; ?>" class="theme-toggle">
-                    <?php echo $theme === 'light' ? '☀️' : '🌙'; ?>
-                </a></li>
             </ul>
         </nav>
     </header>
