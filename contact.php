@@ -1,67 +1,210 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liên hệ </title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <div class="container custom-size">
-        <h1>Liên hệ với chúng tôi </h1>
+<?php
+// Đặt tiêu đề trang
+$page_title = "Liên Hệ";
 
-        <?php
-        // Xử lý form khi người dùng gửi
-        if ($_SERVER["REQUEST_METHOD"] == "POST") {
-            $name = htmlspecialchars($_POST['name']);
-            $email = htmlspecialchars($_POST['email']);
-            $subject = htmlspecialchars($_POST['subject']);
-            $message = htmlspecialchars($_POST['message']);
+// Nhúng header
+include 'header.php';
+?>
 
-            // Ở đây bạn có thể thêm logic để gửi email hoặc lưu vào cơ sở dữ liệu
-            // Ví dụ: mail($to, $subject, $message, $headers);
+<div class="container custom-size">
+    <h1>Liên Hệ</h1>
 
-            // Hiển thị thông báo thành công với class "success-message"
-            echo '<p class="success-message">Tin nhắn đã được gửi thành công!</p>';
-        }
-        ?>
+    <?php
+    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        $name = htmlspecialchars($_POST['name']);
+        $email = htmlspecialchars($_POST['email']);
+        $subject = htmlspecialchars($_POST['subject']);
+        $message = htmlspecialchars($_POST['message']);
+        echo '<p class="success-message">Tin nhắn đã được gửi thành công!</p>';
+    }
+    ?>
 
-        <div class="contact-wrapper">
-            <!-- Form Section -->
-            <div class="form-section">
-                <h2>Gửi tin nhắn cho chúng tôi</h2>
-                <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
-                    <input type="text" name="name" placeholder="Họ và tên" required>
-                    <input type="email" name="email" placeholder="Email" required>
-                    <input type="text" name="subject" placeholder="Chủ đề" required>
-                    <textarea name="message" placeholder="Nội dung tin nhắn" required></textarea>
-                    <button type="submit">Gửi tin nhắn</button>
-                </form>
-            </div>
-            <!-- Contact Info Section -->
-            <div class="info-section">
-                <h2>Liên hệ với chúng tôi</h2>
-                <p>Chúng tôi luôn sẵn sàng lắng nghe ý kiến hoặc chỉ để trò chuyện</p>
-                <ul>
-                    <li>
-                        <span class="icon">📍</span>
-                        <span>Địa chỉ: 198 West 21th Street, Suite 721 New York NY 10016</span>
-                    </li>
-                    <li>
-                        <span class="icon">📞</span>
-                        <span>Điện thoại: +1235 2355 98</span>
-                    </li>
-                    <li>
-                        <span class="icon">✉️</span>
-                        <span>Email: info@yoursite.com</span>
-                    </li>
-                    <li>
-                        <span class="icon">🌐</span>
-                        <span>Website: yoursite.com</span>
-                    </li>
-                </ul>
-            </div>
+    <div class="contact-wrapper">
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2>Gửi tin nhắn cho chúng tôi</h2>
+            <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="POST">
+                <input type="text" name="name" placeholder="Họ và tên" required>
+                <input type="email" name="email" placeholder="Email" required>
+                <input type="text" name="subject" placeholder="Chủ đề" required>
+                <textarea name="message" placeholder="Nội dung tin nhắn" required></textarea>
+                <button type="submit">Gửi tin nhắn</button>
+            </form>
+        </div>
+        <!-- Contact Info Section -->
+        <div class="info-section">
+            <h2>Liên hệ với chúng tôi</h2>
+            <p>Chúng tôi luôn sẵn sàng lắng nghe ý kiến hoặc chỉ để trò chuyện</p>
+            <ul>
+                <li>
+                    <span class="icon">📍</span>
+                    <span>Địa chỉ: SKIBIDI TOLET</span>
+                </li>
+                <li>
+                    <span class="icon">📞</span>
+                    <span>Điện thoại: +1235 2355 98</span>
+                </li>
+                <li>
+                    <span class="icon">✉️</span>
+                    <span>Email: info@yoursite.com</span>
+                </li>
+                <li>
+                    <span class="icon">🌐</span>
+                    <span>Website: yoursite.com</span>
+                </li>
+            </ul>
         </div>
     </div>
-</body>
-</html>
+</div>
+
+
+<style>
+    /* Đảm bảo body không có margin và padding dư thừa */
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        background-color: #f5f5f5;
+    }
+
+    /* Đảm bảo container chính được căn giữa */
+    .container {
+        max-width: 900px;
+        width: 100%;
+        margin: 0 auto; /* Căn giữa theo chiều ngang */
+        padding: 20px;
+        flex: 1; /* Đảm bảo container chiếm không gian còn lại giữa header và footer */
+        display: flex;
+        flex-direction: column;
+        justify-content: center; /* Căn giữa theo chiều dọc */
+        align-items: center; /* Căn giữa theo chiều ngang */
+    }
+
+    .container h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 40px;
+        text-transform: uppercase;
+    }
+
+    .contact-wrapper {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        width: 100%; /* Đảm bảo contact-wrapper chiếm toàn bộ chiều rộng của container */
+    }
+
+    .form-section {
+        flex: 1;
+        background: linear-gradient(135deg, #6e48aa, #9d50bb);
+        padding: 40px;
+        border-radius: 10px;
+        color: #fff;
+        text-align: left;
+    }
+
+    .form-section h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .form-section form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .form-section input,
+    .form-section textarea {
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        font-size: 14px;
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        outline: none;
+    }
+
+    .form-section input::placeholder,
+    .form-section textarea::placeholder {
+        color: rgba(255, 255, 255, 0.7);
+    }
+
+    .form-section textarea {
+        resize: none;
+        height: 100px;
+    }
+
+    .form-section button {
+        padding: 12px;
+        background-color: #ff4081;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    .form-section button:hover {
+        background-color: #e91e63;
+    }
+
+    .info-section {
+        flex: 1;
+        background-color: #fff;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: left;
+    }
+
+    .info-section h2 {
+        font-size: 22px;
+        color: #333;
+        margin-bottom: 20px;
+    }
+
+    .info-section p {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .info-section ul {
+        list-style: none;
+    }
+
+    .info-section ul li {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #333;
+    }
+
+    .info-section .icon {
+        font-size: 20px;
+    }
+
+    .success-message {
+        color: #28a745;
+        font-size: 16px;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+
+    @media (max-width: 768px) {
+        .contact-wrapper {
+            flex-direction: column;
+        }
+
+        .form-section,
+        .info-section {
+            width: 100%;
+        }
+    }
+</style>

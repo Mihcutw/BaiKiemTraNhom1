@@ -6,7 +6,7 @@
 }
 
 body {
-    background: url('https://png.pngtree.com/thumb_back/fh260/background/20230716/pngtree-blue-background-images-free-banner-wallpaper-photos-download-vector-image_7716765.jpg') center / cover fixed;
+    background: url('./images/tientu.png') center / cover fixed;
     min-height: 100vh;
     color: #333;
 }
