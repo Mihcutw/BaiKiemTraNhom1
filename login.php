@@ -16,6 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($email == $_COOKIE["user_email"] && $password == $_COOKIE["user_password"]) {
             $_SESSION["email"] = $email;
             $_SESSION["username"] = $_COOKIE["username"];
+            $_SESSION["user"] = true;
             header("Location: dashboard.php");
             exit();
         } else {
