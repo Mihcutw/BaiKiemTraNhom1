@@ -1,4 +1,3 @@
-
 <?php include 'header.php'; ?>
 
 <div class="update-product-wrapper">
