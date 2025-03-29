@@ -1,55 +1,12 @@
-<?php
-session_start();
-if (isset($_GET['theme'])) {
-    $_SESSION['theme'] = $_GET['theme'];
-}
-$theme = isset($_SESSION['theme']) ? $_SESSION['theme'] : 'light';
-?>
+<?php include 'header.php'; ?>
 
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Chủ</title>
-    <link rel="stylesheet" href="<?php echo $theme === 'dark' ? 'darkmode.css' : 'styles.css'; ?>">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-</head>
-<body>
-    <header>
-        <div class="logo-container">
-            <div class="logo">
-                <img src="./images/123.jpg" alt="Logo">
-            </div>
-            <div class="web-title">
-                <h1>Tên Website</h1>
-                <span class="intro-text">Khám phá trải nghiệm mới</span>
-            </div>
-        </div>
-        <input type="checkbox" id="nav-toggle" class="nav-toggle">
-        <label for="nav-toggle" class="nav-toggle-label"><span></span></label>
-        <nav>
-            <ul>
-                <li><a href="index.php">Trang Chủ</a></li>
-                <li><a href="#">Giới Thiệu</a></li>
-                <li><a href="contact.php">Liên Hệ</a></li>
-                <li><a href="products.php">Cửa Hàng</a></li>
-                <li><a href="?theme=<?php echo $theme === 'light' ? 'dark' : 'light'; ?>" class="theme-toggle">
-                    <?php echo $theme === 'light' ? '☀️' : '🌙'; ?>
-                </a></li>
-            </ul>
-        </nav>
-    </header>
-    <div class="main-content">
-        <h1>Chào mừng đến với chúng tôi</h1>
-        <p>Khám phá và trải nghiệm những điều mới mẻ!</p>
-        <div class="cta-buttons">
+<div class="main-content">
+    <h1>Chào mừng đến với chúng tôi</h1>
+    <p>Khám phá và trải nghiệm những điều mới mẻ!</p>
+    <div class="cta-buttons">
         <a href="register.php" class="cta-button register-btn">Đăng Ký</a>
         <a href="login.php" class="cta-button login-btn">Đăng Nhập</a>
-        </div>
     </div>
-    <footer>
-        <p>© 2025 Bản quyền thuộc về chúng tôi.</p>
-    </footer>
-</body>
-</html>
+</div>
+
+<?php include 'footer.php'; ?>
