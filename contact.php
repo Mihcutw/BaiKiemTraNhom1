@@ -80,7 +80,7 @@ include 'header.php';
 
     .container h1 {
         font-size: 24px;
-        color: #333;
+        color: white ;
         margin-bottom: 40px;
         text-transform: uppercase;
     }
@@ -94,7 +94,7 @@ include 'header.php';
 
     .form-section {
         flex: 1;
-        background: linear-gradient(135deg, #6e48aa, #9d50bb);
+        background: linear-gradient(135deg, #9c5ffd, #1de0ff);
         padding: 40px;
         border-radius: 10px;
         color: #fff;
@@ -135,7 +135,7 @@ include 'header.php';
 
     .form-section button {
         padding: 12px;
-        background-color: #ff4081;
+        background: linear-gradient(135deg, #841dff, #9c5ffd);
         color: #fff;
         border: none;
         border-radius: 5px;
@@ -143,11 +143,6 @@ include 'header.php';
         cursor: pointer;
         transition: background-color 0.3s ease;
     }
-
-    .form-section button:hover {
-        background-color: #e91e63;
-    }
-
     .info-section {
         flex: 1;
         background-color: #fff;
