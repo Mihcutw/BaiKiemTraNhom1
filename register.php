@@ -1,25 +1,31 @@
 <?php
 session_start();
+$errors = [];
+$success = "";
 $username = '';
 $email = '';
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $username = $_POST['username'];
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $username = htmlspecialchars(trim($_POST["username"] ?? ""));
+    $email = htmlspecialchars(trim($_POST["email"] ?? ""));
+    $password = $_POST["password"] ?? "";
+    $confirm_password = $_POST["confirm_password"] ?? "";
 
-    if (strlen($password) < 6) {
-        echo "<script>alert('Mật khẩu phải có 6 chữ!');</script>";
-    } elseif ($password === $confirm_password) {
-        setcookie("user_email", $email, time() + (86400 * 30), "/"); 
+    if (!$username) $errors["username"] = "Vui lòng nhập họ tên.";
+    if (!$email) $errors["email"] = "Vui lòng nhập email.";
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors["email"] = "Email không hợp lệ.";
+    if (!$password) $errors["password"] = "Vui lòng nhập mật khẩu.";
+    elseif (strlen($password) < 6) $errors["password"] = "Mật khẩu phải có ít nhất 6 ký tự.";
+    if ($password !== $confirm_password) $errors["confirm_password"] = "Mật khẩu xác nhận không khớp.";
+
+    if (!$errors) {
+        $success = "Đăng ký thành công! Chào mừng, $username.";
+        setcookie("user_email", $email, time() + (86400 * 30), "/");
         setcookie("user_password", $password, time() + (86400 * 30), "/");
-
-        echo "<script>alert('Đăng ký thành công!');</script>";
+        setcookie("username", $username, time() + (86400 * 30), "/");
+        $_POST = []; // Clear form data
         header("Location: login.php");
         exit();
-    } else {
-        echo "<script>alert('Mật khẩu không giống nhau!');</script>";
     }
 }
 ?>
@@ -56,14 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             animation: fadeInDown 0.6s ease-in-out;
         }
         @keyframes fadeInDown {
-            0% {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
         h2 {
             background: linear-gradient(90deg, #3915bb, #b424b4);
@@ -73,21 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             text-align: center;
             margin-bottom: 1.5rem;
         }
-        .form-group {
-            margin-bottom: 1rem;
-        }
-        label {
-            display: block;
-            color: #4682b4;
-            margin-bottom: 0.5rem;
-        }
-        input {
-            width: 100%;
-            padding: 0.8rem;
-            border: 1px solid #b0c4de;
-            border-radius: 5px;
-            box-sizing: border-box;
-        }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; color: #4682b4; margin-bottom: 0.5rem; }
+        input { width: 100%; padding: 0.8rem; border: 1px solid #b0c4de; border-radius: 5px; box-sizing: border-box; }
         button {
             width: 100%;
             padding: 0.8rem;
@@ -104,24 +92,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: linear-gradient(90deg, #7b68ee, #87ceeb);
             box-shadow: 0 2px 10px rgba(70, 130, 180, 0.5);
         }
-        .links {
-            text-align: center;
-            margin-top: 1rem;
-        }
-        .links a {
-            color: #9370db;
-            text-decoration: none;
-            margin: 0 10px;
-        }
-        .links a:hover {
-            color: #4682b4;
-            text-decoration: underline;
-        }
+        .links { text-align: center; margin-top: 1rem; }
+        .links a { color: #9370db; text-decoration: none; margin: 0 10px; }
+        .links a:hover { color: #4682b4; text-decoration: underline; }
+        .error { color: red; text-align: center; margin-bottom: 1rem; }
+        .success { color: green; text-align: center; margin-bottom: 1rem; }
     </style>
 </head>
 <body>
     <div class="login-container">
         <h2>Đăng Ký</h2>
+        <?php if (!empty($errors)) : ?>
+            <div class="error">
+                <?php foreach ($errors as $error) : ?>
+                    <p><?php echo $error; ?></p>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+        <?php if (!empty($success)) : ?>
+            <div class="success">
+                <p><?php echo $success; ?></p>
+            </div>
+        <?php endif; ?>
         <form method="POST" action="register.php">
             <div class="form-group">
                 <label for="username">Tên người dùng</label>

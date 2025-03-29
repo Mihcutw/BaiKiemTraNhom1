@@ -1,26 +1,26 @@
 <?php
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
 session_start();
+$errors = [];
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = $_POST['username'];
-    $password = $_POST['password'];
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = htmlspecialchars(trim($_POST["username"] ?? ""));
+    $password = $_POST["password"] ?? "";
 
-    if (isset($_COOKIE['user_email']) && isset($_COOKIE['user_password'])) {
-        $stored_email = $_COOKIE['user_email'];
-        $stored_password = $_COOKIE['user_password'];
+    if (!$email) $errors["email"] = "Vui lòng nhập email.";
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors["email"] = "Email không hợp lệ.";
+    if (!$password) $errors["password"] = "Vui lòng nhập mật khẩu.";
 
-        if ($email === $stored_email && $password === $stored_password) {
-            $_SESSION['email'] = $email;
-            $_SESSION['password'] = $password;
+    if (!$errors && isset($_COOKIE["user_email"], $_COOKIE["user_password"])) {
+        if ($email == $_COOKIE["user_email"] && $password == $_COOKIE["user_password"]) {
+            $_SESSION["email"] = $email;
+            $_SESSION["username"] = $_COOKIE["username"];
             header("Location: dashboard.php");
             exit();
         } else {
-            $error = "Email hoặc mật khẩu không đúng!";
+            $errors["login"] = "Email hoặc mật khẩu không đúng!";
         }
-    } else {
-        $error = "Không tìm thấy thông tin đăng ký! Vui lòng đăng ký trước.";
+    } elseif (!$errors) {
+        $errors["login"] = "Không tìm thấy thông tin đăng ký! Vui lòng đăng ký trước.";
     }
 }
 ?>
@@ -50,15 +50,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body>
     <div class="login-container">
         <h2>Đăng Nhập</h2>
-        <?php if (isset($error)) { echo "<p class='error'>$error</p>"; } ?>
+        <?php if (!empty($errors)) : ?>
+            <div class="error">
+                <?php foreach ($errors as $error) : ?>
+                    <p><?php echo $error; ?></p>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
         <form method="POST" action="login.php">
             <div class="form-group">
                 <label for="username">Email</label>
-                <input type="text" id="username" name="username" placeholder="Email người dùng" value="<?php echo isset($_COOKIE['user_email']) ? htmlspecialchars($_COOKIE['user_email']) : ''; ?>" required>
+                <input type="text" id="username" name="username" placeholder="Email người dùng" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
             </div>
             <div class="form-group">
                 <label for="password">Mật khẩu</label>
-                <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" value="<?php echo isset($_COOKIE['user_password']) ? htmlspecialchars($_COOKIE['user_password']) : ''; ?>" required>
+                <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
             </div>
             <button type="submit">Đăng Nhập</button>
         </form>
