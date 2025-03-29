@@ -16,31 +16,31 @@
             <div class="members-grid">
                 <!-- Thành viên 1 -->
                 <div class="member-card">
-                    <img src="https://via.placeholder.com/150" alt="Thành viên 1">
-                    <h3>Nguyễn Văn A</h3>
+                    <img src="./images/trollface.png" alt="Đinh Phú Minh">
+                    <h3>Đinh Phú Minh</h3>
                     <p class="role">Nhà Phát Triển Web</p>
                     <p class="bio">
-                        Nguyễn Văn A là một lập trình viên tài năng với hơn 5 năm kinh nghiệm trong phát triển web. Anh ấy chịu trách nhiệm xây dựng và tối ưu hóa giao diện của trang web.
+                    Đinh Phú Minh là một lập trình viên tài năng với hơn 5 năm kinh nghiệm trong phát triển web. Anh ấy chịu trách nhiệm xây dựng và tối ưu hóa giao diện của trang web.
                     </p>
                 </div>
 
                 <!-- Thành viên 2 -->
                 <div class="member-card">
-                    <img src="https://via.placeholder.com/150" alt="Thành viên 2">
-                    <h3>Trần Thị B</h3>
+                    <img src="./images/trollface2.png" alt="Trần Quang Nhật">
+                    <h3>Trần Quang Nhật</h3>
                     <p class="role">Nhà Thiết Kế UI/UX</p>
                     <p class="bio">
-                        Trần Thị B là một nhà thiết kế sáng tạo, đảm bảo giao diện của trang web không chỉ đẹp mắt mà còn thân thiện với người dùng.
+                    Trần Quang Nhật là một nhà thiết kế sáng tạo, đảm bảo giao diện của trang web không chỉ đẹp mắt mà còn thân thiện với người dùng.
                     </p>
                 </div>
 
                 <!-- Thành viên 3 -->
                 <div class="member-card">
-                    <img src="https://via.placeholder.com/150" alt="Thành viên 3">
-                    <h3>Lê Văn C</h3>
+                    <img src="./images/trollface3.png" alt="Bùi Quốc Trung">
+                    <h3>Bùi Quốc Trung</h3>
                     <p class="role">Quản Lý Sản Phẩm</p>
                     <p class="bio">
-                        Lê Văn C quản lý danh mục sản phẩm và đảm bảo rằng mọi mặt hàng trên trang web đều đáp ứng tiêu chuẩn chất lượng cao nhất.
+                    Bùi Quốc Trung quản lý danh mục sản phẩm và đảm bảo rằng mọi mặt hàng trên trang web đều đáp ứng tiêu chuẩn chất lượng cao nhất.
                     </p>
                 </div>
             </div>
