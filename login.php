@@ -17,7 +17,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $_SESSION["email"] = $email;
             $_SESSION["username"] = $_COOKIE["username"];
             $_SESSION["user"] = true;
-            header("Location: dashboard.php");
+            header("Location: index2.php");
             exit();
         } else {
             $errors["login"] = "Email hoặc mật khẩu không đúng!";

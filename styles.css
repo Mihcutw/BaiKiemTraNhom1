@@ -22,6 +22,8 @@ header {
     position: sticky;
     top: 0;
     z-index: 1000;
+    height: 80px;
+    box-sizing: border-box;
 }
 
 .logo-container {
@@ -65,6 +67,8 @@ header {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
+    margin: 0;
+    padding-bottom: 2px;
 }
 
 .intro-text {
@@ -145,11 +149,12 @@ nav ul {
     flex-direction: column;
     gap: 25px;
     padding: 60px 20px;
+    list-style: none;
 }
 
 nav ul li a {
     color: #333;
-    font-weight: 500;
+    font-weight: 550;
     font-size: 17px;
     text-decoration: none;
     padding: 8px 15px;
@@ -250,3 +255,164 @@ footer {
     color: #555;
     font-size: 14px;
 }
+
+
+
+
+
+/* Sau khi đăng nhập */
+/* Phần chính */
+.main-content {
+    text-align: center; /* Đảm bảo mọi thứ căn giữa */
+    padding: 60px 20px;
+    margin: 80px auto;
+    max-width: 900px;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.subtitle {
+    font-size: 18px;
+    color: #555;
+    margin-bottom: 40px;
+}
+
+/* Phần chào mừng người dùng */
+.user-welcome {
+    background: rgba(255, 255, 255, 0.95);
+    padding: 25px;
+    border-radius: 15px;
+    margin: 0 auto 30px;
+    max-width: 700px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.user-avatar img {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #00eaff;
+}
+
+.user-details {
+    text-align: left; /* Chữ trong user-details căn trái cho tự nhiên */
+}
+
+.user-details h2 {
+    font-size: 26px;
+    background: linear-gradient(90deg, #00eaff, #ff007a);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin: 0;
+}
+
+.user-details p {
+    font-size: 16px;
+    color: #666;
+    margin: 5px 0 0;
+}
+
+/* Nút hành động */
+.cta-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.dashboard-btn {
+    background: linear-gradient(135deg, #00eaff, #ff007a);
+    color: #fff;
+}
+
+.explore-btn {
+    background: transparent;
+    color: #ff007a;
+    border: 2px solid #ff007a;
+}
+
+/* Phần gợi ý */
+.suggestions {
+    margin-top: 40px;
+}
+
+.suggestions h3 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.suggestion-cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    border-radius: 10px;
+    width: 260px;
+    text-align: center; /* Chữ trong card căn giữa */
+    transition: transform 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.card h4 {
+    font-size: 18px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.card p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 15px;
+}
+
+.card-link {
+    font-size: 14px;
+    color: #ff007a;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.card-link:hover {
+    color: #00eaff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .user-info {
+        flex-direction: column;
+        text-align: center;
+    }
+    .user-details {
+        text-align: center; /* Căn giữa trên mobile */
+    }
+    .card {
+        width: 100%;
+        max-width: 300px;
+    }
+}
+
+
+
+
+
