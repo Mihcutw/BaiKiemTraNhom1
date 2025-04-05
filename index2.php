@@ -8,16 +8,6 @@ if (!isset($_SESSION['user'])) {
     exit();
 }
 ?>
-
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Chủ - Đã Đăng Nhập</title>
-    <link href="styles.css" rel="stylesheet">
-</head>
-<body>
     <?php include 'header.php'; ?>
 
     <div class="main-content">
