@@ -4,7 +4,7 @@ if (session_status() == PHP_SESSION_NONE) {
     session_start();
 }
 ?>
-
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
 <header>
     <div class="logo-container">
         <div class="logo">
@@ -28,7 +28,7 @@ if (session_status() == PHP_SESSION_NONE) {
             <?php
             // Thêm Dashboard nếu đã đăng nhập
             if (isset($_SESSION['user'])) {
-                echo '<li><a href="dashboard.php">Dashboard</a></li>';
+                echo '<li><a href="dashboard.php">Bảng điều khiển</a></li>';
             }
             // Hiển thị Đăng Xuất hoặc Đăng Nhập
             if (isset($_SESSION['user'])) {

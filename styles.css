@@ -4,6 +4,10 @@
     box-sizing: border-box;
     font-family: 'Poppins', sans-serif;
 }
+@font-face {
+    font-family: 'MIXONE';
+    src: url('MIXONE.ttf') format('truetype');
+}
 
 body {
     background: url('./images/pngtree-colorful-blue-purple-gradient-technology-future-sense-streamer-flashing-e-commerce-picture-image_1621913.jpg') center / cover fixed;
@@ -154,8 +158,9 @@ nav ul {
 
 nav ul li a {
     color: #333;
-    font-weight: 550;
-    font-size: 17px;
+    font-weight: 100; /* Làm chữ mỏng hơn (font-weight thấp nhất) */
+    font-size: 20px;
+    font-family: 'MIXONE', 'Arial', sans-serif; /* Font chính và font dự phòng */
     text-decoration: none;
     padding: 8px 15px;
     border-radius: 6px;
@@ -187,12 +192,14 @@ nav ul li a:hover {
         gap: 15px;
         padding: 0;
         list-style: none;
-    }
+    } 
     nav ul li a {
-        font-weight: 700;
+        font-weight: 700; /* Đậm cho MIXONE */
+    }
+    nav ul li a:lang(vi) {
+        font-weight: 100; /* Mỏng cho tiếng Việt */
     }
 }
-
 .main-content {
     text-align: center;
     padding: 60px 20px;
