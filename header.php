@@ -14,7 +14,7 @@
     <header>
         <div class="logo-container">
             <div class="logo">
-                <img src="./images/tientu.png" alt="Logo">
+                <img src="./images/pngtree-colorful-blue-purple-gradient-technology-future-sense-streamer-flashing-e-commerce-picture-image_1621913.jpg" alt="Logo">
             </div>
             <div class="web-title">
                 <h1>Tên Website</h1>
