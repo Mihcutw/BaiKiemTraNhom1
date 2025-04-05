@@ -63,7 +63,6 @@ $products = [
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif; /* Sử dụng font Roboto */
 }
-
 /* Wrapper cho toàn bộ trang */
 .products-wrapper {
     min-height: 100vh;
@@ -258,5 +257,11 @@ tbody tr:hover {
     th, td {
         min-width: 150px;
     }
+}
+body{
+    background-image: url(images/shope.jpg);
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
 }
     </style>
