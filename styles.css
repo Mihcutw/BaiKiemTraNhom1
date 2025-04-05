@@ -184,8 +184,12 @@ nav ul li a:hover {
     }
     nav ul {
         flex-direction: row;
-        gap: 30px;
+        gap: 15px;
         padding: 0;
+        list-style: none;
+    }
+    nav ul li a {
+        font-weight: 700;
     }
 }
 
