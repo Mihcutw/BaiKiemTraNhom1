@@ -1,11 +1,18 @@
 <?php
-$page_title = "Đăng Ký"; // Đặt tiêu đề trang
-include 'header.php'; // Bao gồm header
+require_once 'config.php';
+
+$page_title = "Đăng Ký";
+include 'header.php';
 
 $errors = [];
 $success = "";
 $username = '';
 $email = '';
+
+if (isset($_SESSION['user_id'])) {
+    header("Location: index2.php");
+    exit();
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = htmlspecialchars(trim($_POST["username"] ?? ""));
@@ -21,13 +28,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($password !== $confirm_password) $errors["confirm_password"] = "Mật khẩu xác nhận không khớp.";
 
     if (!$errors) {
-        $success = "Đăng ký thành công! Chào mừng, $username.";
-        setcookie("user_email", $email, time() + (86400 * 30), "/");
-        setcookie("user_password", $password, time() + (86400 * 30), "/");
-        setcookie("username", $username, time() + (86400 * 30), "/");
-        $_POST = [];
-        header("Location: login.php");
-        exit();
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        if ($stmt->fetch()) {
+            $errors["email"] = "Email đã được sử dụng.";
+        }
+    }
+
+    if (!$errors) {
+        $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+        $stmt = $conn->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+        if ($stmt->execute([$username, $email, $hashed_password])) {
+            $success = "Đăng ký thành công! Chào mừng, $username.";
+            $_POST = [];
+            header("Location: login.php");
+            exit();
+        } else {
+            $errors["database"] = "Đã có lỗi xảy ra. Vui lòng thử lại.";
+        }
     }
 }
 ?>
@@ -36,15 +54,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="login-container">
         <h2>Đăng Ký</h2>
         <?php if (!empty($errors)) : ?>
-            <div class="error">
+            <div class="error-messages">
                 <?php foreach ($errors as $error) : ?>
-                    <p><?php echo $error; ?></p>
+                    <p class="error"><?php echo $error; ?></p>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
         <?php if (!empty($success)) : ?>
-            <div class="success">
-                <p><?php echo $success; ?></p>
+            <div class="success-message">
+                <p class="success"><?php echo $success; ?></p>
             </div>
         <?php endif; ?>
         <form method="POST" action="register.php">
@@ -90,7 +108,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-bottom: 60px; /* Đảm bảo không bị footer che khuất */
+        padding-bottom: 60px;
     }
     .login-container {
         background-color: #fff;
@@ -137,8 +155,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     .links { text-align: center; margin-top: 1rem; }
     .links a { color: #9370db; text-decoration: none; margin: 0 10px; }
     .links a:hover { color: #4682b4; text-decoration: underline; }
-    .error { color: red; text-align: center; margin-bottom: 1rem; }
-    .success { color: green; text-align: center; margin-bottom: 1rem; }
+    .error-messages { color: red; font-weight: bold; text-align: center; margin-bottom: 1rem; }
+    .error { background-color: #ffdddd; padding: 10px; border-radius: 5px; }
+    .success-message { color: green; font-weight: bold; text-align: center; margin-bottom: 1rem; }
+    .success { background-color: #ddffdd; padding: 10px; border-radius: 5px; }
 </style>
 
-<?php include 'footer.php'; // Bao gồm footer ?>
+<?php include 'footer.php'; ?>

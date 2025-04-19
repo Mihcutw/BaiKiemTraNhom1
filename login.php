@@ -1,29 +1,39 @@
 <?php
-$page_title = "Đăng Nhập"; // Đặt tiêu đề trang
-include 'header.php'; // Bao gồm header
+require_once 'config.php';
+
+$page_title = "Đăng Nhập";
+include 'header.php';
 
 $errors = [];
 
+if (isset($_SESSION['user_id'])) {
+    header("Location: index2.php");
+    exit();
+}
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = htmlspecialchars(trim($_POST["username"] ?? ""));
+    $email = htmlspecialchars(trim($_POST["email"] ?? ""));
     $password = $_POST["password"] ?? "";
 
     if (!$email) $errors["email"] = "Vui lòng nhập email.";
     elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors["email"] = "Email không hợp lệ.";
     if (!$password) $errors["password"] = "Vui lòng nhập mật khẩu.";
 
-    if (!$errors && isset($_COOKIE["user_email"], $_COOKIE["user_password"])) {
-        if ($email == $_COOKIE["user_email"] && $password == $_COOKIE["user_password"]) {
-            $_SESSION["email"] = $email;
-            $_SESSION["username"] = $_COOKIE["username"];
-            $_SESSION["user"] = true;
+    if (!$errors) {
+        $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($password, $user['password'])) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['email'] = $email;
+            $_SESSION['user'] = true;
             header("Location: index2.php");
             exit();
         } else {
-            $errors["login"] = "Email hoặc mật khẩu không đúng!";
+            $errors["login"] = "Sai email hoặc mật khẩu!";
         }
-    } elseif (!$errors) {
-        $errors["login"] = "Không tìm thấy thông tin đăng ký! Vui lòng đăng ký trước.";
     }
 }
 ?>
@@ -32,16 +42,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <div class="login-container">
         <h2>Đăng Nhập</h2>
         <?php if (!empty($errors)) : ?>
-            <div class="error">
+            <div class="error-messages">
                 <?php foreach ($errors as $error) : ?>
-                    <p><?php echo $error; ?></p>
+                    <p class="error"><?php echo $error; ?></p>
                 <?php endforeach; ?>
             </div>
         <?php endif; ?>
         <form method="POST" action="login.php">
             <div class="form-group">
-                <label for="username">Email</label>
-                <input type="text" id="username" name="username" placeholder="Email người dùng" value="<?php echo isset($_POST['username']) ? htmlspecialchars($_POST['username']) : ''; ?>" required>
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" placeholder="Email người dùng" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
             </div>
             <div class="form-group">
                 <label for="password">Mật khẩu</label>
@@ -73,7 +83,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         display: flex;
         justify-content: center;
         align-items: center;
-        padding-bottom: 60px; /* Đảm bảo không bị footer che khuất */
+        padding-bottom: 60px;
     }
     .login-container {
         background-color: #fff;
@@ -120,7 +130,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     .links { text-align: center; margin-top: 1rem; }
     .links a { color: #9370db; text-decoration: none; margin: 0 10px; }
     .links a:hover { color: #4682b4; text-decoration: underline; }
-    .error { color: red; text-align: center; margin-bottom: 1rem; }
+    .error-messages { color: red; font-weight: bold; text-align: center; margin-bottom: 1rem; }
+    .error { background-color: #ffdddd; padding: 10px; border-radius: 5px; }
 </style>
 
-<?php include 'footer.php'; // Bao gồm footer ?>
+<?php include 'footer.php'; ?>

@@ -2,14 +2,33 @@
 // Bắt đầu session
 session_start();
 
-// Kiểm tra nếu không có session hoặc cookie thì chuyển hướng về index1.php
-if (!isset($_SESSION['user']) && !isset($_COOKIE['username'])) {
-    header("Location: index1.php");
+// Kết nối cơ sở dữ liệu
+require_once 'config.php';
+
+// Kiểm tra nếu không có session user_id thì chuyển hướng về login.php
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
     exit();
 }
 
-// Lấy username từ cookie nếu tồn tại, nếu không thì từ session
-$username = isset($_COOKIE['username']) ? $_COOKIE['username'] : $_SESSION['user'];
+// Lấy username từ database
+try {
+    $stmt = $conn->prepare("SELECT username FROM users WHERE id = ?");
+    $stmt->execute([$_SESSION['user_id']]);
+    $user = $stmt->fetch();
+    
+    if ($user) {
+        $username = $user['username'];
+    } else {
+        // Nếu không tìm thấy user, hủy session và chuyển hướng
+        session_destroy();
+        header("Location: login.php");
+        exit();
+    }
+} catch (PDOException $e) {
+    // Xử lý lỗi cơ sở dữ liệu
+    die("Database error: " . $e->getMessage());
+}
 ?>
 
 <?php include 'header.php'; ?>
@@ -24,7 +43,7 @@ $username = isset($_COOKIE['username']) ? $_COOKIE['username'] : $_SESSION['user
         <div class="user-info">
             <div class="user-avatar">
                 <!-- Placeholder cho ảnh đại diện, có thể thay bằng ảnh thật từ database -->
-                <img src="images/animegirl.gif" alt="Avatar">
+                <img src="https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExY2twdjVmY2h0OGw3d2trMGNmbmRxcmhqb2djYjYwMGQ0em5sMjFlNiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/a6pzK009rlCak/giphy.gif" alt="Avatar">
             </div>
             <div class="user-details">
                 <h2>Xin chào, <?php echo htmlspecialchars($username); ?>!</h2>
