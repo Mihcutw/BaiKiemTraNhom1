@@ -30,9 +30,21 @@ try {
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
         reset_password VARCHAR(255) DEFAULT NULL,
+        avatar VARCHAR(255) DEFAULT NULL,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )";
     $conn->exec($sql);
+
+    // Thêm cột avatar nếu chưa tồn tại (cho cơ sở dữ liệu đã tạo trước đó)
+    try {
+        $sql = "ALTER TABLE users ADD COLUMN avatar VARCHAR(255) DEFAULT NULL";
+        $conn->exec($sql);
+    } catch (PDOException $e) {
+        // Bỏ qua nếu cột đã tồn tại
+        if ($e->getCode() != '42S21') { // Mã lỗi khi cột đã tồn tại
+            die("Failed to add avatar column: " . $e->getMessage());
+        }
+    }
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
