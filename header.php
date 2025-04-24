@@ -26,9 +26,10 @@ if (session_status() == PHP_SESSION_NONE) {
             <li><a href="contact.php">Liên Hệ</a></li>
             <li><a href="products.php">Cửa Hàng</a></li>
             <?php
-            // Thêm Dashboard nếu đã đăng nhập
+            // Thêm Dashboard và Trang Cá Nhân nếu đã đăng nhập
             if (isset($_SESSION['user'])) {
                 echo '<li><a href="dashboard.php">Bảng điều khiển</a></li>';
+                echo '<li><a href="profile.php">Trang Cá Nhân</a></li>';
             }
             // Hiển thị Đăng Xuất hoặc Đăng Nhập
             if (isset($_SESSION['user'])) {
