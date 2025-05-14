@@ -1,10 +1,14 @@
 <?php
-// Dữ liệu sản phẩm
-$products = [
-    ['id' => 1, 'name' => 'Áo Thun Den', 'price' => 200000],
-    ['id' => 2, 'name' => 'Quần Jeans Xanh', 'price' => 500000],
-    ['id' => 3, 'name' => 'Giày Thể Thao', 'price' => 800000],
-];
+include 'config.php';
+
+try {
+    // Lấy dữ liệu từ bảng products
+    $stmt = $conn->query('SELECT * FROM products');
+    $products = $stmt->fetchAll();
+} catch (PDOException $e) {
+    echo "Lỗi truy vấn: " . $e->getMessage();
+    exit;
+}
 ?>
 
 <?php include 'header.php'; ?>
@@ -25,6 +29,8 @@ $products = [
                         <th>ID</th>
                         <th>Tên Sản Phẩm</th>
                         <th>Giá</th>
+                        <th>Số lượng</th>
+                        <th>Mô tả</th>
                         <th>Hành Động</th>
                     </tr>
                 </thead>
@@ -34,9 +40,11 @@ $products = [
                             <td><?php echo $product['id']; ?></td>
                             <td><?php echo htmlspecialchars($product['name']); ?></td>
                             <td class="price"><?php echo number_format($product['price'], 0, ',', '.') . ' VNĐ'; ?></td>
+                            <td><?php echo $product['quantity']; ?></td>
+                            <td><?php echo htmlspecialchars($product['description'] ?? 'Không có mô tả'); ?></td>
                             <td>
-                                <a href="#" class="btn btn-edit">Sửa</a>
-                                <a href="#" 
+                                <a href="edit.php?id=<?php echo $product['id']; ?>" class="btn btn-edit">Sửa</a>
+                                <a href="delete.php?id=<?php echo $product['id']; ?>" 
                                    class="btn btn-delete" 
                                    onclick="return confirm('Bạn có chắc muốn xóa sản phẩm này?');">Xóa</a>
                             </td>
@@ -44,7 +52,7 @@ $products = [
                     <?php endforeach; ?>
                     <?php if (empty($products)): ?>
                         <tr>
-                            <td colspan="4" class="empty-message">Hiện chưa có sản phẩm nào trong danh sách</td>
+                            <td colspan="6" class="empty-message">Hiện chưa có sản phẩm nào trong danh sách</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -54,7 +62,6 @@ $products = [
 </div>
 
 <?php include 'footer.php'; ?>
-
     <style>
 /* Reset mặc định */
 * {
