@@ -1,3 +1,44 @@
+<?php
+require_once 'config_user.php';
+
+$errors = [];
+$success = '';
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $email = htmlspecialchars(trim($_POST["email"] ?? ""));
+    $new_password = $_POST["new-password"] ?? "";
+    $confirm_password = $_POST["confirm-password"] ?? "";
+
+    // Validate dữ liệu
+    if (!$email) $errors["email"] = "Vui lòng nhập email.";
+    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors["email"] = "Email không hợp lệ.";
+    if (!$new_password) $errors["password"] = "Vui lòng nhập mật khẩu mới.";
+    elseif (strlen($new_password) < 6) $errors["password"] = "Mật khẩu mới phải có ít nhất 6 ký tự.";
+    if ($new_password !== $confirm_password) $errors["confirm_password"] = "Mật khẩu xác nhận không khớp.";
+
+    if (!$errors) {
+        // Kiểm tra email có tồn tại không
+        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
+        $stmt->execute([$email]);
+        $user = $stmt->fetch();
+
+        if ($user) {
+            // Cập nhật mật khẩu mới
+            $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+            $stmt = $conn->prepare("UPDATE users SET password = ?, reset_password = NULL WHERE email = ?");
+            if ($stmt->execute([$hashed_password, $email])) {
+                $success = "Mật khẩu đã được đặt lại thành công! Vui lòng đăng nhập.";
+                header("Refresh: 2; url=login.php");
+            } else {
+                $errors["database"] = "Đã có lỗi xảy ra. Vui lòng thử lại.";
+            }
+        } else {
+            $errors["email"] = "Email không tồn tại.";
+        }
+    }
+}
+?>
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -81,15 +122,31 @@
         .back-link a:hover {
             text-decoration: underline;
         }
+        .error-messages { color: red; font-weight: bold; text-align: center; margin-bottom: 1rem; }
+        .error { background-color: #ffdddd; padding: 10px; border-radius: 5px; }
+        .success-message { color: green; font-weight: bold; text-align: center; margin-bottom: 1rem; }
+        .success { background-color: #ddffdd; padding: 10px; border-radius: 5px; }
     </style>
 </head>
 <body>
     <div class="reset-container">
         <h2>Đặt Lại Mật Khẩu</h2>
-        <form>
+        <?php if (!empty($errors)) : ?>
+            <div class="error-messages">
+                <?php foreach ($errors as $error) : ?>
+                    <p class="error"><?php echo $error; ?></p>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+        <?php if (!empty($success)) : ?>
+            <div class="success-message">
+                <p class="success"><?php echo $success; ?></p>
+            </div>
+        <?php endif; ?>
+        <form method="POST" action="reset-password.php">
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Nhập email của bạn" required>
+                <input type="email" id="email" name="email" placeholder="Nhập email của bạn" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
             </div>
             <div class="form-group">
                 <label for="new-password">Mật khẩu mới</label>

@@ -1,9 +1,39 @@
+<?php
+include 'config.php';
+
+$error = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $name = $_POST['product-name'];
+    $price = $_POST['price'];
+    $quantity = $_POST['quantity'];
+    $description = $_POST['description'];
+
+    // Validate dữ liệu
+    if (!empty($name) && is_numeric($price) && $price >= 0 && is_numeric($quantity) && $quantity >= 0) {
+        try {
+            $stmt = $conn->prepare('INSERT INTO products (name, price, quantity, description) VALUES (?, ?, ?, ?)');
+            $stmt->execute([$name, $price, $quantity, $description]);
+            header('Location: products.php');
+            exit;
+        } catch (PDOException $e) {
+            $error = "Lỗi khi thêm sản phẩm: " . $e->getMessage();
+        }
+    } else {
+        $error = "Vui lòng nhập đầy đủ và đúng định dạng.";
+    }
+}
+?>
+
 <?php include 'header.php'; ?>
 
 <div class="add-product-wrapper">
     <div class="add-product-container">
         <h2>Thêm Sản Phẩm</h2>
-        <form id="add-product-form" onsubmit="return validateForm(event)">
+        <?php if ($error): ?>
+            <p style="color: #ff4081;"><?php echo $error; ?></p>
+        <?php endif; ?>
+        <form id="add-product-form" method="POST">
             <div class="form-group">
                 <label for="product-name">Tên sản phẩm</label>
                 <input type="text" id="product-name" name="product-name" placeholder="Nhập tên sản phẩm" required>

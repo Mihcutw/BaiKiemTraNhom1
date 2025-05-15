@@ -1,5 +1,5 @@
 <?php
-require_once 'config.php';
+require_once 'config_user.php';
 
 $page_title = "Đăng Ký";
 include 'header.php';

@@ -3,29 +3,53 @@
 session_start();
 
 // Kết nối cơ sở dữ liệu
-require_once 'config.php';
+require_once 'config_user.php';
 
-// Kiểm tra nếu không có session user_id thì chuyển hướng về login.php
-if (!isset($_SESSION['user_id'])) {
+// Kiểm tra nếu không có session user_id hoặc admin_id thì chuyển hướng về login.php
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
 }
 
+// Đảm bảo $conn_user tồn tại
+if (!isset($conn_user)) {
+    die("Lỗi: Không thể kết nối đến cơ sở dữ liệu user_management.");
+}
+
 // Lấy username và avatar từ database
 try {
-    $stmt = $conn->prepare("SELECT username, avatar FROM users WHERE id = ?");
-    $stmt->execute([$_SESSION['user_id']]);
-    $user = $stmt->fetch();
-    
-    if ($user) {
-        $username = $user['username'];
-        // Nếu avatar không tồn tại hoặc rỗng, sử dụng avatar mặc định
-        $avatar = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : 'https://i.pinimg.com/originals/b2/ea/a0/b2eaa0d4918d54021f9c7aa3fc3d3cf3.jpg';
+    if (isset($_SESSION['admin_id'])) {
+        // Nếu là admin, lấy thông tin từ bảng admins
+        $stmt = $conn_user->prepare("SELECT username FROM admins WHERE id = ?");
+        $stmt->execute([$_SESSION['admin_id']]);
+        $admin = $stmt->fetch();
+        
+        if ($admin) {
+            $username = $admin['username'];
+            // Avatar cố định mới cho admin
+            $avatar = 'https://cdn.hero.page/pfp/92a703ca-3ad4-48ef-8883-a37dd918b569-silhouetted-anime-character-anime-pfp-dark-featuring-male-characters-3.png'; // Thay URL này bằng URL avatar mới bạn muốn
+        } else {
+            // Nếu không tìm thấy admin, hủy session và chuyển hướng
+            session_destroy();
+            header("Location: login.php");
+            exit();
+        }
     } else {
-        // Nếu không tìm thấy user, hủy session và chuyển hướng
-        session_destroy();
-        header("Location: login.php");
-        exit();
+        // Nếu là user, lấy thông tin từ bảng users
+        $stmt = $conn_user->prepare("SELECT username, avatar FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user = $stmt->fetch();
+        
+        if ($user) {
+            $username = $user['username'];
+            // Nếu avatar không tồn tại hoặc rỗng, sử dụng avatar mặc định
+            $avatar = !empty($user['avatar']) ? htmlspecialchars($user['avatar']) : 'https://i.pinimg.com/originals/b2/ea/a0/b2eaa0d4918d54021f9c7aa3fc3d3cf3.jpg';
+        } else {
+            // Nếu không tìm thấy user, hủy session và chuyển hướng
+            session_destroy();
+            header("Location: login.php");
+            exit();
+        }
     }
 } catch (PDOException $e) {
     // Xử lý lỗi cơ sở dữ liệu

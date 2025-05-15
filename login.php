@@ -1,38 +1,79 @@
 <?php
-require_once 'config.php';
+require_once 'config_user.php';
 
 $page_title = "Đăng Nhập";
 include 'header.php';
 
 $errors = [];
 
-if (isset($_SESSION['user_id'])) {
-    header("Location: index2.php");
-    exit();
+// Chỉ chuyển hướng nếu đã đăng nhập và truy cập trang login.php
+if (isset($_SESSION['user_id']) || isset($_SESSION['admin_id'])) {
+    if (basename($_SERVER['PHP_SELF']) == 'login.php') {
+        header("Location: index2.php");
+        exit();
+    }
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $email = htmlspecialchars(trim($_POST["email"] ?? ""));
+    $login_input = htmlspecialchars(trim($_POST["email"] ?? "")); // Sử dụng "email" input để nhập username hoặc email
     $password = $_POST["password"] ?? "";
 
-    if (!$email) $errors["email"] = "Vui lòng nhập email.";
-    elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors["email"] = "Email không hợp lệ.";
+    if (!$login_input) $errors["login_input"] = "Vui lòng nhập username hoặc email.";
     if (!$password) $errors["password"] = "Vui lòng nhập mật khẩu.";
 
     if (!$errors) {
-        $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE email = ?");
-        $stmt->execute([$email]);
-        $user = $stmt->fetch();
+        // Kiểm tra trường hợp đặc biệt: nếu login_input là "admin", sử dụng username để đăng nhập admin
+        if (strtolower($login_input) === "admin") {
+            $stmt = $conn_user->prepare("SELECT id, username, password, email FROM admins WHERE username = ? LIMIT 1");
+            $stmt->execute([$login_input]);
+            $admin = $stmt->fetch();
 
-        if ($user && password_verify($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
-            $_SESSION['email'] = $email;
-            $_SESSION['user'] = true;
-            header("Location: index2.php");
-            exit();
+            if ($admin && password_verify($password, $admin['password'])) {
+                $_SESSION['admin_id'] = $admin['id'];
+                $_SESSION['username'] = $admin['username'];
+                $_SESSION['email'] = $admin['email']; // Đã thêm cột email vào truy vấn
+                $_SESSION['is_admin'] = true;
+                $_SESSION['last_activity'] = time(); // Khởi tạo thời gian hoạt động
+                // Bỏ cập nhật last_login vì cột này chưa tồn tại
+                header("Location: index2.php");
+                exit();
+            } else {
+                $errors["login"] = "Sai username hoặc mật khẩu!";
+            }
         } else {
-            $errors["login"] = "Sai email hoặc mật khẩu!";
+            // Nếu không phải "admin", kiểm tra email cho cả admin và user
+            // Kiểm tra admin trước
+            $stmt = $conn_user->prepare("SELECT id, username, password, email FROM admins WHERE email = ? LIMIT 1");
+            $stmt->execute([$login_input]);
+            $admin = $stmt->fetch();
+
+            if ($admin && password_verify($password, $admin['password'])) {
+                $_SESSION['admin_id'] = $admin['id'];
+                $_SESSION['username'] = $admin['username'];
+                $_SESSION['email'] = $admin['email'];
+                $_SESSION['is_admin'] = true;
+                $_SESSION['last_activity'] = time(); // Khởi tạo thời gian hoạt động
+                // Bỏ cập nhật last_login vì cột này chưa tồn tại
+                header("Location: index2.php");
+                exit();
+            } else {
+                // Kiểm tra user
+                $stmt = $conn_user->prepare("SELECT id, username, password, email FROM users WHERE email = ? LIMIT 1");
+                $stmt->execute([$login_input]);
+                $user = $stmt->fetch();
+
+                if ($user && password_verify($password, $user['password'])) {
+                    $_SESSION['user_id'] = $user['id'];
+                    $_SESSION['username'] = $user['username'];
+                    $_SESSION['email'] = $user['email'];
+                    $_SESSION['is_user'] = true;
+                    $_SESSION['last_activity'] = time(); // Khởi tạo thời gian hoạt động
+                    header("Location: index2.php");
+                    exit();
+                } else {
+                    $errors["login"] = "Sai email hoặc mật khẩu!";
+                }
+            }
         }
     }
 }
@@ -50,8 +91,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
         <form method="POST" action="login.php">
             <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Email người dùng" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
+                <label for="email">Username hoặc Email</label>
+                <input type="text" id="email" name="email" placeholder="Nhập username hoặc email" value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>" required>
             </div>
             <div class="form-group">
                 <label for="password">Mật khẩu</label>

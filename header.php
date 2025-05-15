@@ -21,20 +21,23 @@ if (session_status() == PHP_SESSION_NONE) {
     <nav>
         <ul>
             <!-- Điều chỉnh link Trang Chủ dựa trên trạng thái đăng nhập -->
-            <li><a href="<?php echo isset($_SESSION['user']) ? 'index2.php' : 'index.php'; ?>">Trang Chủ</a></li>
+            <li><a href="<?php echo (isset($_SESSION['user_id']) || isset($_SESSION['admin_id'])) ? 'index2.php' : 'index.php'; ?>">Trang Chủ</a></li>
             <li><a href="gioithieu.php">Giới Thiệu</a></li>
             <li><a href="contact.php">Liên Hệ</a></li>
             <li><a href="products.php">Cửa Hàng</a></li>
             <?php
-            // Thêm Dashboard và Trang Cá Nhân nếu đã đăng nhập
-            if (isset($_SESSION['user'])) {
-                echo '<li><a href="dashboard.php">Bảng điều khiển</a></li>';
+            // Kiểm tra trạng thái đăng nhập bằng user_id hoặc admin_id
+            if (isset($_SESSION['user_id']) || isset($_SESSION['admin_id'])) {
+                // Hiển thị liên kết Trang Cá Nhân cho cả admin và user
                 echo '<li><a href="profile.php">Trang Cá Nhân</a></li>';
-            }
-            // Hiển thị Đăng Xuất hoặc Đăng Nhập
-            if (isset($_SESSION['user'])) {
+                // Chỉ hiển thị Dashboard nếu là admin
+                if (isset($_SESSION['admin_id']) && $_SESSION['is_admin']) {
+                    echo '<li><a href="dashboard.php">Bảng điều khiển</a></li>';
+                }
+                // Hiển thị nút Đăng Xuất
                 echo '<li><a href="logout.php">Đăng Xuất</a></li>';
             } else {
+                // Nếu chưa đăng nhập
                 echo '<li><a href="login.php">Đăng Nhập</a></li>';
             }
             ?>

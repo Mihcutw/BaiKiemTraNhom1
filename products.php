@@ -2,8 +2,13 @@
 include 'config.php';
 
 try {
+    // Đảm bảo $conn_store tồn tại
+    if (!isset($conn_store)) {
+        die("Lỗi: Không thể kết nối đến cơ sở dữ liệu store_management.");
+    }
+
     // Lấy dữ liệu từ bảng products
-    $stmt = $conn->query('SELECT * FROM products');
+    $stmt = $conn_store->query('SELECT * FROM products');
     $products = $stmt->fetchAll();
 } catch (PDOException $e) {
     echo "Lỗi truy vấn: " . $e->getMessage();
@@ -62,7 +67,8 @@ try {
 </div>
 
 <?php include 'footer.php'; ?>
-    <style>
+
+<style>
 /* Reset mặc định */
 * {
     margin: 0;
@@ -266,4 +272,4 @@ tbody tr:hover {
         min-width: 150px;
     }
 }
-    </style>
+</style>

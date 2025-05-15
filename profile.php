@@ -3,29 +3,50 @@
 session_start();
 
 // Kết nối cơ sở dữ liệu
-require_once 'config.php';
+require_once 'config_user.php';
 
-// Kiểm tra nếu không có session user_id thì chuyển hướng về login.php
-if (!isset($_SESSION['user_id'])) {
+// Kiểm tra nếu không có session user_id hoặc admin_id thì chuyển hướng về login.php
+if (!isset($_SESSION['user_id']) && !isset($_SESSION['admin_id'])) {
     header("Location: login.php");
     exit();
 }
 
+// Đảm bảo $conn_user tồn tại
+if (!isset($conn_user)) {
+    die("Lỗi: Không thể kết nối đến cơ sở dữ liệu user_management.");
+}
+
 // Lấy thông tin người dùng từ database
 try {
-    $stmt = $conn->prepare("SELECT username, email, avatar, password, created_at FROM users WHERE id = ?");
-    $stmt->execute([$_SESSION['user_id']]);
-    $user = $stmt->fetch();
-    
+    if (isset($_SESSION['admin_id'])) {
+        // Nếu là admin, lấy thông tin từ bảng admins
+        $stmt = $conn_user->prepare("SELECT username, email, created_at FROM admins WHERE id = ?");
+        $stmt->execute([$_SESSION['admin_id']]);
+        $user = $stmt->fetch();
+        $is_admin = true;
+    } else {
+        // Nếu là user, lấy thông tin từ bảng users
+        $stmt = $conn_user->prepare("SELECT username, email, avatar, password, created_at FROM users WHERE id = ?");
+        $stmt->execute([$_SESSION['user_id']]);
+        $user = $stmt->fetch();
+        $is_admin = false;
+    }
+
     if ($user) {
         $username = $user['username'];
         $email = $user['email'] ? $user['email'] : 'Chưa cập nhật email';
-        // Nếu avatar không tồn tại hoặc rỗng, sử dụng avatar mặc định
-        $avatar = !empty($user['avatar']) ? $user['avatar'] : 'https://i.pinimg.com/originals/b2/ea/a0/b2eaa0d4918d54021f9c7aa3fc3d3cf3.jpg';
-        $hashed_password = $user['password'];
         $created_at = $user['created_at'] ? date('d/m/Y H:i:s', strtotime($user['created_at'])) : 'Chưa có thông tin';
+        if ($is_admin) {
+            // Avatar cố định mới cho admin
+            $avatar = 'https://cdn.hero.page/pfp/92a703ca-3ad4-48ef-8883-a37dd918b569-silhouetted-anime-character-anime-pfp-dark-featuring-male-characters-3.png'; // Thay URL này bằng URL avatar mới bạn muốn
+            $hashed_password = null; // Admin không cần hiển thị mật khẩu ở đây
+        } else {
+            // Nếu avatar không tồn tại hoặc rỗng, sử dụng avatar mặc định
+            $avatar = !empty($user['avatar']) ? $user['avatar'] : 'https://i.pinimg.com/originals/b2/ea/a0/b2eaa0d4918d54021f9c7aa3fc3d3cf3.jpg';
+            $hashed_password = $user['password'];
+        }
     } else {
-        // Nếu không tìm thấy user, hủy session và chuyển hướng
+        // Nếu không tìm thấy user/admin, hủy session và chuyển hướng
         session_destroy();
         header("Location: login.php");
         exit();
@@ -42,8 +63,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_info'])) {
         $new_email = $_POST['email'] ?? $email;
 
         // Cập nhật thông tin vào database
-        $stmt = $conn->prepare("UPDATE users SET username = ?, email = ? WHERE id = ?");
-        $stmt->execute([$new_username, $new_email, $_SESSION['user_id']]);
+        if ($is_admin) {
+            $stmt = $conn_user->prepare("UPDATE admins SET username = ?, email = ? WHERE id = ?");
+            $stmt->execute([$new_username, $new_email, $_SESSION['admin_id']]);
+        } else {
+            $stmt = $conn_user->prepare("UPDATE users SET username = ?, email = ? WHERE id = ?");
+            $stmt->execute([$new_username, $new_email, $_SESSION['user_id']]);
+        }
 
         // Cập nhật lại biến để hiển thị
         $username = $new_username;
@@ -55,8 +81,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_info'])) {
     }
 }
 
-// Xử lý đổi mật khẩu
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
+// Xử lý đổi mật khẩu (chỉ cho user, admin sẽ không có chức năng này ở đây)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password']) && !$is_admin) {
     try {
         $old_password = $_POST['old_password'] ?? '';
         $new_password = $_POST['new_password'] ?? '';
@@ -74,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
             $new_hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
             // Cập nhật mật khẩu mới vào database
-            $stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $stmt = $conn_user->prepare("UPDATE users SET password = ? WHERE id = ?");
             $stmt->execute([$new_hashed_password, $_SESSION['user_id']]);
 
             $success_password = "Đổi mật khẩu thành công!";
@@ -85,8 +111,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['change_password'])) {
     }
 }
 
-// Xử lý đổi avatar
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_avatar'])) {
+// Xử lý đổi avatar (chỉ cho user, admin sẽ không có chức năng này ở đây)
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_avatar']) && !$is_admin) {
     try {
         // Xử lý tải lên avatar
         $new_avatar = $avatar;
@@ -119,7 +145,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_avatar'])) {
         }
 
         // Cập nhật avatar vào database
-        $stmt = $conn->prepare("UPDATE users SET avatar = ? WHERE id = ?");
+        $stmt = $conn_user->prepare("UPDATE users SET avatar = ? WHERE id = ?");
         $stmt->execute([$new_avatar, $_SESSION['user_id']]);
 
         // Cập nhật lại biến để hiển thị
@@ -273,7 +299,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_avatar'])) {
                 </form>
             </div>
 
-            <!-- Form đổi mật khẩu -->
+            <!-- Form đổi mật khẩu (chỉ hiển thị cho user) -->
+            <?php if (!$is_admin): ?>
             <div class="card">
                 <?php if (isset($success_password)): ?>
                     <p style="color: green; font-size: 14px; margin-bottom: 10px;"><?php echo htmlspecialchars($success_password); ?></p>
@@ -298,8 +325,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_avatar'])) {
                     <button type="submit" class="cta-button dashboard-btn">Đổi mật khẩu</button>
                 </form>
             </div>
+            <?php endif; ?>
 
-            <!-- Form đổi avatar -->
+            <!-- Form đổi avatar (chỉ hiển thị cho user) -->
+            <?php if (!$is_admin): ?>
             <div class="card">
                 <?php if (isset($success_avatar)): ?>
                     <p style="color: green; font-size: 14px; margin-bottom: 10px;"><?php echo htmlspecialchars($success_avatar); ?></p>
@@ -328,24 +357,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_avatar'])) {
                     <button type="submit" class="cta-button dashboard-btn">Cập nhật hình đại diện</button>
                 </form>
             </div>
+            <?php endif; ?>
         </div>
     </div>
 </div>
 
 <script>
     // JavaScript để hiển thị preview avatar
-    document.getElementById('avatar').addEventListener('change', function(event) {
+    document.getElementById('avatar')?.addEventListener('change', function(event) {
         const file = event.target.files[0];
         const previewImg = document.getElementById('avatar-preview-img');
 
-        if (file) {
+        if (file && previewImg) {
             const reader = new FileReader();
             reader.onload = function(e) {
                 previewImg.src = e.target.result;
                 previewImg.style.display = 'block';
             };
             reader.readAsDataURL(file);
-        } else {
+        } else if (previewImg) {
             previewImg.style.display = 'none';
         }
     });
