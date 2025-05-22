@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th5 22, 2025 lúc 10:01 PM
+-- Thời gian đã tạo: Th5 22, 2025 lúc 10:06 PM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -60,8 +60,6 @@ CREATE TABLE `orders` (
 --
 
 INSERT INTO `orders` (`id`, `user_id`, `full_name`, `phone`, `email`, `address`, `additional_info`, `total`, `created_at`, `status`) VALUES
-(18, 15, 'Đinh phú Minh', '0387632921', 'admin@gmail.com', '3/131', 'như lồnnnnnnnnnnn', 1169000.00, '2025-05-22 17:27:37', 'delivered'),
-(19, 15, 'Đinh phú Minh', '0387632921', 'admin@gmail.com', '3/131', 'lồn', 200000.00, '2025-05-22 18:20:55', 'delivered'),
 (20, 15, 'Đinh phú Minh', '0387632944', 'fdsf@gmail.com', '3/131', 'n', 200000.00, '2025-05-22 19:04:41', 'cancelled');
 
 -- --------------------------------------------------------
@@ -97,8 +95,6 @@ CREATE TABLE `order_items` (
 --
 
 INSERT INTO `order_items` (`id`, `order_id`, `product_id`, `quantity`, `price`) VALUES
-(20, 18, 1, 7, 167000.00),
-(21, 19, 1, 2, 100000.00),
 (22, 20, 1, 2, 100000.00);
 
 -- --------------------------------------------------------
