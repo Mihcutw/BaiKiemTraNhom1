@@ -6,7 +6,7 @@
 }
 @font-face {
     font-family: 'MIXONE';
-    src: url('MIXONE.ttf') format('truetype');
+    src: url('./resources/MIXONE.ttf') format('truetype');
 }
 
 body {
